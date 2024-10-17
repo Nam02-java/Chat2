@@ -38,16 +38,13 @@ public class OutputDataToClient {
                 if (messageFromClient.contains("- request history data")) {
                     List<String> listChatHistory = readLogServer.read(data);
                     for (String message : listChatHistory) {
-                        //socketDataOutput.sendData(clientSocket, "Old message ( " + message + " ) - total message " + listChatHistory.size());
                         socketDataOutput.sendData(clientSocket, "Old message ( " + message + " )");
                     }
 
                 } else {
                     for (Socket socket : Data.getClientSockets()) {
                         if (socket != clientSocket) {
-                            String ID = String.valueOf(parseFile.getBiggestID(new File(Data.getFilePath())));
-                            String fullMessage = ID + "." + " " + messageFromClient;
-                            socketDataOutput.sendData(socket, fullMessage);
+                            socketDataOutput.sendData(socket, messageFromClient);
                         }
                     }
                 }

@@ -1,6 +1,5 @@
 package MVC.Controller.Client.Networking.Input;
 
-import MVC.Model.Data;
 import MVC.Service.InterfaceService.File.ParseFile;
 import MVC.Service.InterfaceService.String.ParseString;
 import MVC.Service.LazySingleton.ID.BiggestID;
@@ -10,11 +9,8 @@ import MVC.Service.ServiceImplenments.File.ParseFileImplementation;
 import MVC.Service.ServiceImplenments.String.ParseStringImplementation;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class InputDataFromServer {
     private BufferedReader inFromServer;
@@ -70,39 +66,3 @@ public class InputDataFromServer {
     }
 }
 
-//  int biggestID = parseFile.getBiggestID(new File(Data.getFilePath()));
-//                    if (messageFromServer.contains("Old message")) {
-//                        flag = true;
-//                        serverCurrentMessageID = parseString.getIDFromHistoryMessage(messageFromServer);
-//                    } else {
-//                        if (flag == true) {
-//                            continue;
-//                        }
-//                        flag = false;
-//                        serverCurrentMessageID = biggestID;
-//                    }
-//                    if (serverCurrentMessageID < biggestID) {
-//                        flag = false;
-//
-//                        if (messageFromServer.contains(UserNameManager.getInstance().getUsername())) {
-//                            String userName = UserNameManager.getInstance().getUsername();
-//                            messageFromServer = messageFromServer.replaceFirst(userName + " : ", "");
-//                        }
-//                    }
-//                    if (messageFromServer.contains(UserNameManager.getInstance().getUsername())) {
-//                        String userName = UserNameManager.getInstance().getUsername();
-//                        messageFromServer = messageFromServer.replaceFirst(userName + " : ", "");
-//                    }
-//                    System.out.println(messageFromServer);
-
-//còn cái này nó có 1 nhược điểm
-//
-//ID càng lúc càng tăng dần
-//
-//còn load lịch sử thì ID càng lúc càng thấp xuống vì đào sâu ở csdl
-//
-//với cái điều kiện If (serverCurrentMessageID < biggestId){
-//
-//thì khi load xong lịch sử mà trong lúc load có 3 tin nhắn tới
-//
-//serverCurrentMessageID sẽ bé hơn 2 tin nhắn đầu

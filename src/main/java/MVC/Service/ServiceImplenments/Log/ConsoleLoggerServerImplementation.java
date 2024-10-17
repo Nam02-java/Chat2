@@ -35,7 +35,6 @@ public class ConsoleLoggerServerImplementation implements ConsoleLoggerServer {
             @Override
             public void write(int b) {
 
-
                 char c = (char) b;
 
                 buffer.append(c);
@@ -49,15 +48,8 @@ public class ConsoleLoggerServerImplementation implements ConsoleLoggerServer {
                             !isSystemMessageHistory(line) &&
                             !isSystemMessageRequestHistory(line)) {
 
-                        if (file.length() == 0) {
-                            IDManager.getInstance().updateMaxReceivedId(1);
-                            String ID = IDManager.getInstance().getMaxReceivedId() + "." + " ";
-                            fileOut.print(ID + line);
-                        } else if (file.length() >= 1) {
-                            IDManager.getInstance().updateMaxReceivedId(parseFile.getBiggestID(file) + 1);
-                            String ID = IDManager.getInstance().getMaxReceivedId() + "." + " ";
-                            fileOut.print(ID + line);
-                        }
+                        fileOut.print(line);
+
                     }
 
                     buffer.setLength(0);
