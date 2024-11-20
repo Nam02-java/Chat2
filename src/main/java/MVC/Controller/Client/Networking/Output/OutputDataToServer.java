@@ -1,10 +1,12 @@
 package MVC.Controller.Client.Networking.Output;
 
 import MVC.Model.Data;
+import MVC.Service.Enum.Status;
 import MVC.Service.InterfaceService.File.ParseFile;
 import MVC.Service.InterfaceService.IO.SocketDataOutput;
 import MVC.Service.InterfaceService.IO.UserInputReceiver;
 import MVC.Service.LazySingleton.ID.IDManager;
+import MVC.Service.LazySingleton.Status.StatusManager;
 import MVC.Service.LazySingleton.UserName.UserNameManager;
 import MVC.Service.ServiceImplenments.File.ParseFileImplementation;
 
@@ -39,12 +41,17 @@ public class OutputDataToServer {
                 IDManager.getInstance().updateMaxReceivedId(parseFile.getBiggestID(file) + 1);
                 ID = IDManager.getInstance().getMaxReceivedId() + "." + " ";
             }
+            StatusManager.getInstance().setCurrentStatus(Status.RELAX);
 
             String fullMessage = ID + messageToSend;
             if (messageToSend.contains("1")) {
                 fullMessage = UserNameManager.getInstance().getUsername() + " : - request history data";
+                StatusManager.getInstance().setCurrentStatus(Status.LOADING);
             }
-            socketDataOutput.sendData(serverSocket, fullMessage);
+            socketDataOutput.sendData(serverSocket,
+                    fullMessage,
+                    StatusManager.getInstance().getCurrentStatus(),
+                    UserNameManager.getInstance().getUsername());
         }
     }
 }

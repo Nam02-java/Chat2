@@ -1,8 +1,10 @@
 package MVC.Controller.Client.Networking.Input;
 
+import MVC.Service.Enum.Status;
 import MVC.Service.InterfaceService.File.ParseFile;
 import MVC.Service.InterfaceService.String.ParseString;
 import MVC.Service.LazySingleton.ID.BiggestID;
+import MVC.Service.LazySingleton.Status.StatusManager;
 import MVC.Service.LazySingleton.UserName.UserNameManager;
 import MVC.Service.InterfaceService.IO.SocketInputReader;
 import MVC.Service.ServiceImplenments.File.ParseFileImplementation;
@@ -11,6 +13,8 @@ import MVC.Service.ServiceImplenments.String.ParseStringImplementation;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class InputDataFromServer {
     private BufferedReader inFromServer;
@@ -29,37 +33,33 @@ public class InputDataFromServer {
         new Thread(() -> {
             try {
                 String messageFromServer;
-                boolean flag = false;
-                int count = 0;
+                int currentMessageId;
+                Map<Integer, String> messageMap = new TreeMap<>();
+
                 while ((messageFromServer = inFromServer.readLine()) != null) {
 
-                    int serverCurrentMessageID = parseString.getIDMessage(messageFromServer);
-                    int biggestIdSinceClientLaunch = BiggestID.getInstance().getBiggestID();
+                    String[] parts = messageFromServer.split("\\|", 3);
+                    Status status = Status.valueOf(parts[0].trim());
+                    String userName = parts[1].trim();
+                    String messageContent = parts[2].trim();
 
-                    if (serverCurrentMessageID <= biggestIdSinceClientLaunch) {
-                        flag = true;
-                        count++;
-                        if (count == 5) {
-                            flag = false;
-                        }
-                    } else {
-                        if (flag == true) {
-                            continue;
-                        }
-                        count = 0;
+                    System.out.println(UserNameManager.getInstance().getUsername());
+                    if (UserNameManager.getInstance().getUsername().equals(userName)) {
+                        StatusManager.getInstance().setCurrentStatus(status);
                     }
 
-                    if (messageFromServer.contains(UserNameManager.getInstance().getUsername())) {
-                        String userName = UserNameManager.getInstance().getUsername();
-                        messageFromServer = messageFromServer.replaceFirst(userName + " : ", "");
+                    currentMessageId = parseString.getIDMessage(messageFromServer);
+                    messageMap.put(currentMessageId, messageContent);
+
+                    if (StatusManager.getInstance().getCurrentStatus() == Status.RELAX) {
+                        for (String message : messageMap.values()) {
+                            System.out.println(message);
+                        }
+                        messageMap.clear();
                     }
-                    Thread.sleep(1000);
-                    System.out.println(messageFromServer);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }).start();

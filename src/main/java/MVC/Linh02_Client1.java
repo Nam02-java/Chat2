@@ -2,7 +2,9 @@ package MVC;
 
 import MVC.Controller.Client.ClientManager;
 import MVC.Model.Data;
+import MVC.Service.Enum.Status;
 import MVC.Service.LazySingleton.ID.BiggestID;
+import MVC.Service.LazySingleton.Status.StatusManager;
 import MVC.Service.LazySingleton.UserName.UserNameManager;
 
 import java.io.File;
@@ -13,6 +15,8 @@ public class Linh02_Client1 {
 
         BiggestID.getInstance().setBiggestID(new File(Data.getFilePath()));
         UserNameManager.getInstance().setUsername("Linh02");
+
+        StatusManager.getInstance().setCurrentStatus(Status.RELAX);
 
         ClientManager clientManager = new ClientManager();
         clientManager.initializeClient();
